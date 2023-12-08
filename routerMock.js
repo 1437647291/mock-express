@@ -1,9 +1,26 @@
 const express = require('express');
 const dayjs = require('dayjs');
 const mon = require('./mongoConfig');
-const router = require('./router');
 const mockRouter = express.Router();
 const app = express();
+
+const getMockinterface = () => {
+  mon('interfaceList').then(collection => {
+    collection.find().then((interfaces) => {
+      // 循环创建接口
+      interfaces.forEach(interfaceItem => {
+        const { methodType, interfaceName, id } = interfaceItem;
+        mockRouter[methodType === '1' ? 'get' : 'post'](interfaceName, async (req, res) => {
+          const jsonCollection = await mon('jsonArr');
+          const jsonList = await jsonCollection.find();
+          res.send(jsonList.find(jsonItem => jsonItem.parentId === id && jsonItem.default === 1)?.jsonContent);
+        });
+      })
+    });
+  });
+};
+
+getMockinterface();
 
 mockRouter.get('/interface/list', async (req, res) => {
   const { currentPage, pageSize, name } = req.query;
@@ -34,7 +51,7 @@ mockRouter.post('/interface/add', async (req, res) => {
   const data = req.body;
   const collection = await mon('interfaceList');
   await collection.add({ ...data, id: `IF_${new Date().getTime()}`, time: dayjs().format('YYYY-MM-DD HH:mm:ss') });
-  app.use('/api', router);
+  getMockinterface();
   res.send({
     code: 200,
     data: true,
@@ -50,7 +67,7 @@ mockRouter.post('/interface/del', async (req, res) => {
   const jsonCollection = await mon('jsonArr');
 
   await jsonCollection.del({ parentId: data.id });
-
+  getMockinterface();
   res.send({
     code: 200,
     data: true,
@@ -62,6 +79,7 @@ mockRouter.post('/interface/edit', async (req, res) => {
   const data = req.body;
   const collection = await mon('interfaceList');
   await collection.update(data.id, data, 'id');
+  getMockinterface();
   res.send({
     code: 200,
     data: true,
@@ -82,6 +100,7 @@ mockRouter.post('/json/add', async (req, res) => {
   };
   
   await collection.add({ ...data, jsonId: `JN_${new Date().getTime()}` });
+  getMockinterface();
   res.send({
     code: 200,
     data: true,
@@ -93,6 +112,7 @@ mockRouter.post('/json/del', async (req, res) => {
   const data = req.body;
   const collection = await mon('jsonArr');
   await collection.del(data);
+  getMockinterface();
   res.send({
     code: 200,
     data: true,
@@ -104,6 +124,7 @@ mockRouter.post('/json/edit', async (req, res) => {
   const data = req.body;
   const collection = await mon('jsonArr');
   await collection.update(data.jsonId, data, 'jsonId');
+  getMockinterface();
   res.send({
     code: 200,
     data: true,
@@ -123,7 +144,7 @@ mockRouter.post('/json/change', async (req, res) => {
   // 更新对应的default字段
   await collection.update(currentChose[0].jsonId, { ...currentChose[0], default: 0 }, 'jsonId');
   await collection.update(data.jsonId, { ...needUpdate[0], default: 1 }, 'jsonId');
-
+  getMockinterface();
   res.send({
     code: 200,
     data: true,

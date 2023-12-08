@@ -17,7 +17,7 @@ app.use((err, req, res, next) => {
 })
 app.use('/api', routerMock);
 app.use('/api', router);
-app.use('/api', routerCustom);
+// app.use('/api', routerCustom);
 
 app.listen(3333, () => {
   console.log('Express Serve Running in http://localhost:3333.....');
