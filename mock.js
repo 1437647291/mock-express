@@ -3,7 +3,6 @@ const app = express();
 const router = require('./router');
 const routerMock = require('./routerMock');
 const routerCustom = require('./routerCustom');
-const hostname = '0.0.0.0';
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());

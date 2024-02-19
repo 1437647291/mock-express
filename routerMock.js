@@ -152,6 +152,54 @@ mockRouter.post('/json/change', async (req, res) => {
   });
 });
 
+mockRouter.post('/user/login', async (req, res) => {
+  const data = req.body;
+  const collection = await mon('user');
+
+  const currentUser = await collection.search({ account: data.account });
+  if (currentUser.length) {
+    if (currentUser[0].password === data.password) {
+      res.send({
+        code: 200,
+        data: Math.random(),
+        msg: '登陆成功'
+      });
+    } else {
+      res.send({
+        code: 200,
+        data: true,
+        msg: '账号或密码错误'
+      });
+    }
+  } else {
+    res.send({
+      code: 200,
+      data: false,
+      msg: '账号未注册，请前往注册'
+    });
+  }
+});
+
+mockRouter.post('/user/register', async (req, res) => {
+  const data = req.body;
+  const collection = await mon('user');
+  const currentUser = await collection.search({ account: data.account });
+  if (currentUser.length) {
+    res.send({
+      code: 500,
+      data: false,
+      msg: '账号已注册，请前往登陆'
+    });
+  } else {
+    await collection.add({ ...data, userId: `UID${new Date().getTime()}` });
+    res.send({
+      code: 200,
+      data: true,
+      msg: '注册成功，请前往登陆'
+    })
+  };
+})
+
 mockRouter.post('/json/del111', async (req, res) => {
   const collection = await mon('interfaceList');
   const list = await collection.find();
