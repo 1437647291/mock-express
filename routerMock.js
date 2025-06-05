@@ -25,10 +25,9 @@ getMockinterface();
 mockRouter.get('/interface/list', async (req, res) => {
   const { currentPage, pageSize, name } = req.query;
   const collection = await mon('interfaceList');
-  const list = await collection.find();
-  const total = list.length;
-  const result = await collection.find(req.query);
-
+  console.log('name', name);
+  const result = await collection.find(name ? { "interfaceName": name } : {});
+  console.log('result', result)
   const jsonCollection = await mon('jsonArr');
   const jsonList = await jsonCollection.find();
   
@@ -40,7 +39,7 @@ mockRouter.get('/interface/list', async (req, res) => {
     data: {
       current: currentPage ? currentPage : 1,
       pageSize: pageSize ? pageSize : 10,
-      total,
+      total: result.length,
       list: result,
     },
     msg: '查询成功'

@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "dayjs": "^1.11.9",
+    "express": "^5.1.0",
     "mongodb": "^5.7.0",
     "mongoose": "^7.4.3"
   },

@@ -20,6 +20,7 @@ const e = require('express');
 
 var MongoClient = require('mongodb').MongoClient;
 const url = "mongodb://127.0.0.1:27017";
+// const url = "mongodb://39.99.254.132:27017";
 const client = new MongoClient(url);
 // let dbs;
 
@@ -43,12 +44,12 @@ async function main(collectionName) {
     // if (data?.dafault) {
     //   return collections.find({default: data?.dafault}).toArray();
     // };
-
+    
     if (data) {
       const { currentPage = 1, pageSize = 10, name } = data;
       const limitNum = Number(pageSize);
       const formatCurPage = limitNum * (Number(currentPage) - 1);
-      return collections.find(name ? { name } : {}).limit(limitNum).skip(formatCurPage).toArray();
+      return collections.find(data).limit(limitNum).skip(formatCurPage).toArray();
     }
     return collections.find().toArray();
   };
