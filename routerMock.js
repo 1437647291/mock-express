@@ -19,7 +19,6 @@ const getMockinterface = () => {
     });
   });
 };
-
 getMockinterface();
 
 mockRouter.get('/interface/list', async (req, res) => {
