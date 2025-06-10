@@ -19,6 +19,7 @@ const e = require('express');
 
 
 var MongoClient = require('mongodb').MongoClient;
+// const url = "mongodb://39.99.254.132:27017";
 const url = "mongodb://127.0.0.1:27017";
 // const url = "mongodb://39.99.254.132:27017";
 const client = new MongoClient(url);
