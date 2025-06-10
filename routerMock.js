@@ -24,9 +24,7 @@ getMockinterface();
 mockRouter.get('/interface/list', async (req, res) => {
   const { currentPage, pageSize, name } = req.query;
   const collection = await mon('interfaceList');
-  console.log('name', name);
   const result = await collection.find(name ? { "interfaceName": name } : {});
-  console.log('result', result)
   const jsonCollection = await mon('jsonArr');
   const jsonList = await jsonCollection.find();
   

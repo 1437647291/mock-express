@@ -10,13 +10,11 @@ async function main(dbName, collectionName) {
   const collections = dbs.collection(collectionName);
   // 查找方法
   const find = (data) => {
-    console.log('data', data === {})
     if (data) {
       const { currentPage = 1, pageSize = 10, name } = data;
       const limitNum = Number(pageSize);
       const formatCurPage = limitNum * (Number(currentPage) - 1);
-      console.log('---------', name ? { name } : {...data});
-      return collections.find(name ? { name } : {...data}).limit(limitNum).skip(formatCurPage).toArray();
+      return collections.find({...data}).limit(limitNum).skip(formatCurPage).toArray();
     }
     return collections.find().toArray();
   };
