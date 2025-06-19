@@ -214,6 +214,24 @@ mockRouter.post('/json/del111', async (req, res) => {
     data: true,
     msg: '删除成功'
   })
-})
+});
+
+mockRouter.get('/my/sse', (req, res) => {
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.setHeader('Cache-Control', 'no-cache');
+  res.setHeader('Connection', 'keep-alive');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.flushHeaders();
+
+  const intervalId = setInterval(() => {
+    const message = `Data at ${new Date().toLocaleTimeString()}`;
+    res.write(`data: ${message}\n\n`);
+  }, 2000);
+ 
+    // 当客户端断开连接时，清除定时器
+    req.on('close', () => {
+      clearInterval(intervalId);
+    });
+});
 
 module.exports = mockRouter;
